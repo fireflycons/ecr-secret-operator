@@ -1,0 +1,12 @@
+# AWS account ID forms each table header
+# 
+# IAM User account used should only require ecr:GetAuthorizationToken permission.
+# 
+[123456789012]
+access_key = "AKAIEXAMPLE"
+secret_key = "WQwgEXAMPLEepH2PfnebQUlZ50"
+
+[210987654321]
+access_key = "AKAIEXAMPLE2"
+secret_key = "WQwgEXAMPLE2epH2PfnebQUlZ50"
+

@@ -1,0 +1,10 @@
+resources:
+- manager.yaml
+- manager_configmap.yaml
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+images:
+- name: controller
+  newName: fireflycons/ecr-secret-operator
+  newTag: 0.0.1

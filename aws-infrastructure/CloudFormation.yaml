@@ -1,0 +1,44 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Create IAM::Uder that can rotate ECR auth token
+
+Resources:
+
+  ECRAuthGroup:
+    Type: AWS::IAM::Group
+    Properties:
+      Path: /ECRManagement/
+      Policies:
+        - PolicyName: ecr-token-rotate
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+            - Effect: "Allow"
+              Action: ecr:GetAuthorizationToken
+              Resource: "*"
+
+  ECRAuthUser:
+    Type: AWS::IAM::User
+    Properties:
+      Path: /ECRManagement/
+      Groups:
+        - !Ref ECRAuthGroup
+
+  # You may want to create this manually in the IAM console
+  # so that the secrey key is not vissble in stack outputs
+  # section of CloudFormation console
+  ECRAuthAccessKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      Status: Active
+      UserName: !Ref ECRAuthUser
+
+Outputs:
+  AccessKey:
+    Description: Access key for the created user
+    Value: !Ref ECRAuthAccessKey
+
+  SecretKey:
+    Description: Secret key for the created user
+    Value: !GetAtt
+      - ECRAuthAccessKey
+      - SecretAccessKey

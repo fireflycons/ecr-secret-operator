@@ -1,0 +1,47 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: manager-role
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - '*'
+- apiGroups:
+  - ""
+  resources:
+  - secrets/status
+  verbs:
+  - get
+- apiGroups:
+  - secrets.fireflycons.io
+  resources:
+  - ecrsecrets
+  verbs:
+  - '*'
+- apiGroups:
+  - secrets.fireflycons.io
+  resources:
+  - ecrsecrets/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - secrets.fireflycons.io
+  resources:
+  - ecrsecrets/status
+  verbs:
+  - get
+  - patch
+  - update
