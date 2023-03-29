@@ -14,9 +14,14 @@
                 "kind": "test",
                 "isDefault": true
             },
-            "command": [
-                "make vscodesetup | tail -1 > ${workspaceFolder}/.vscode/test.env",
-            ],
+            "linux": {
+                "command": [
+                    "make vscodesetup | tail -1 > ${workspaceFolder}/.vscode/test.env",
+                ]
+            },
+            "windows": {
+                "command": "Write-Host 'Works only for Linux' | Out-Null"
+            },
             "presentation": {
                 "echo": true,
                 "reveal": "silent",
