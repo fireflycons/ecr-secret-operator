@@ -38,3 +38,4 @@ config/*.yaml
 *.bak
 starter/
 
+helmchart/ecr-secret-operator/local-values.yaml
