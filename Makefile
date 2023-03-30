@@ -3,7 +3,9 @@
 REPO ?= fireflycons/ecr-secret-operator
 TAG ?= 0.0.1
 IMG ?= ${REPO}:${TAG}
-CHART_VERSION ?= 0.1.1
+
+# Helmchart settings
+CHART_VERSION ?= 0.1.0
 CHART_DIR ?= helmchart/ecr-secret-operator
 
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.

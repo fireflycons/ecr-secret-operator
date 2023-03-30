@@ -38,8 +38,9 @@ spec:
     spec:
       volumes:
       - name: config
-        configMap:
-          name: cm
+        secret:
+          secretName: manager-secret
+          optional: false
       # TODO(user): Uncomment the following code to configure the nodeAffinity expression
       # according to the platforms which are supported by your solution.
       # It is considered best practice to support multiple architectures. You can

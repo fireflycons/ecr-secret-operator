@@ -1,0 +1,7 @@
+# Any temp yaml files created specifically in this directory
+*.yaml
+!Chart.yaml
+!values.yaml
+!templates/*.yaml
+!crds/*.yaml
+!charts/*.yaml
