@@ -16,5 +16,4 @@ ecrSecretOperatorControllerManagerDeployment:
       - --config-file=/etc/manager-config/config.toml
     image:
       repository: fireflycons/ecr-secret-operator
-      tag: 0.0.1
   replicas: 1

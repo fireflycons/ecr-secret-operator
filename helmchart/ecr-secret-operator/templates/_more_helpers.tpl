@@ -21,3 +21,7 @@ secret_key = "{{ $v.secretKey }}"
 {{- define "ecr-secret-operator.contollerManagerLabel" -}}
 {{ (include "ecr-secret-operator.fullname" .) }}-controller-manager
 {{- end }}
+
+{{- define "ecr-secret-operator.imageTag" -}}
+{{ .Values.ecrSecretOperatorControllerManagerDeployment.manager.image.tag | default .Chart.AppVersion }}
+{{- end }}

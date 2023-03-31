@@ -17,7 +17,9 @@ limitations under the License.
 package main
 
 import (
+	"errors"
 	"flag"
+	"fmt"
 	"os"
 	"time"
 
@@ -72,6 +74,12 @@ func main() {
 	flag.Parse()
 
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
+
+	// Test for config file existence
+	if _, err := os.Stat(configFile); errors.Is(err, os.ErrNotExist) {
+		setupLog.Error(err, fmt.Sprintf("unable to start manager - '%s' not found.", configFile))
+		os.Exit(1)
+	}
 
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
 		Scheme:                 scheme,

@@ -69,6 +69,8 @@ type ECRSecretReconciler struct {
 func (r *ECRSecretReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
 
+	log.V(5).Info("Begin reconciler")
+
 	var (
 		emptyResult = ctrl.Result{}
 		ecrSecret   secretsv1beta1.ECRSecret
@@ -97,6 +99,8 @@ func (r *ECRSecretReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		return arr[0], arr[3]
 	}(ecrSecret.Spec.Registry)
 
+	log.V(5).Info("Read ECRSecret", "AccountID", accountId, "Region", region)
+
 	//
 	// Handle changes
 	//
@@ -118,6 +122,8 @@ func (r *ECRSecretReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		os.Exit(1)
 	}
 
+	log.V(5).Info("Loaded AWS credentials", "AccountID", accountId, "AccessKey", credentials.AccessKeyID)
+
 	// AWS session to use for this resource
 	err = r.Auth.SetCredentials(credentials, region)
 
@@ -134,6 +140,7 @@ func (r *ECRSecretReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		// If we get here, need to create a new secret
 		var secret *corev1.Secret
 
+		log.V(5).Info("Creating new docker-registry secret", "Name", getKubeSecretName(&ecrSecret))
 		secret, err = constructSecret(r, &ecrSecret, &r.Auth, r.Clock)
 
 		if err != nil {
@@ -160,7 +167,7 @@ func (r *ECRSecretReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 			// Update to required state - effectively regenerate the secret
 
 			if err = ksecret.UpdateSecret(&r.Auth, foundSecret, r.Clock); err == nil {
-				log.V(1).Info("Updating secret", "secret", foundSecret.Name)
+				log.Info("Updating secret", "secret", foundSecret.Name)
 				err = r.Update(ctx, foundSecret)
 			}
 		}

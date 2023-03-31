@@ -11,13 +11,13 @@ echo "Postprocessing chart in $CHART_DIR"
 rm $CHART_DIR/templates/*namespace*.yaml
 for f in $(ls $CHART_DIR/templates/*.yaml)
 do
-    sed -i -s '/^  namespace:/d' $f;
+    sed -i '/^  namespace:/d' $f;
 done
 
 # Patch rolebinding subject nameapace
 for f in $(ls $CHART_DIR/templates/*binding*.yaml) ; do
-    sed -i -s 's/^  - namespace:.*/  - namespace: {{ .Release.Namespace }}/' $f;
-    sed -i -s 's/^    namespace:.*/    namespace: {{ .Release.Namespace }}/' $f;
+    sed -i 's/^  - namespace:.*/  - namespace: {{ .Release.Namespace }}/' $f;
+    sed -i 's/^    namespace:.*/    namespace: {{ .Release.Namespace }}/' $f;
 done
 
 # Make Prometheus service monitor conditonal
@@ -25,6 +25,9 @@ TEMPLATE=$CHART_DIR/templates/ecr-secret-operator-controller-manager-metrics-mon
 
 sed -i '1 i\{{- if .Values.prometheus.enabled }}' $TEMPLATE
 sed -i '$ a\{{- end}}' $TEMPLATE
+
+# Fix https://github.com/yeahdongcn/kustohelmize/issues/20
+sed -i 's/ecr-secret-operator.imageTag/include "ecr-secret-operator.imageTag" ./' $CHART_DIR/templates/ecr-secret-operator-controller-manager-deployment.yaml
 
 # Clean values.yaml
 $LOCALBIN/yq -i e 'del(.. | select(tag == "!!map" and length == 0))' $CHART_DIR/values.yaml 

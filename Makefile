@@ -1,7 +1,7 @@
 
 # Image URL to use all building/pushing image targets
 REPO ?= fireflycons/ecr-secret-operator
-TAG ?= 0.0.1
+TAG ?= 0.0.3
 IMG ?= ${REPO}:${TAG}
 
 # Helmchart settings
