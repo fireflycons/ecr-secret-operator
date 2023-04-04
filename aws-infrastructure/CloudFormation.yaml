@@ -8,7 +8,7 @@ Resources:
     Properties:
       Path: /ECRManagement/
       Policies:
-        - PolicyName: ecr-token-rotate
+        - PolicyName: ecr-auth-and-read
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
