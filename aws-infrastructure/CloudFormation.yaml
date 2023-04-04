@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: Create IAM::Uder that can rotate ECR auth token
+Description: Create IAM::User that can authenticate with and pull images from ECR
 
 Resources:
 
@@ -13,7 +13,12 @@ Resources:
             Version: "2012-10-17"
             Statement:
             - Effect: "Allow"
-              Action: ecr:GetAuthorizationToken
+              Action:
+                - ecr:GetDownloadUrlForLayer
+                - ecr:BatchGetImage
+                - ecr:DescribeImages
+                - ecr:GetAuthorizationToken
+                - ecr:BatchCheckLayerAvailability
               Resource: "*"
 
   ECRAuthUser:

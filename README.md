@@ -78,7 +78,7 @@ A Helm chart is provided in [helmchart/ecr-secret-operator](.helmchart/ecr-secre
 
 You must configure at least one AWS account for the operator to use
 
-In your custom values file, the key `AWS` contains one or more sub-keys where each sub-key is an AWS account ID. Beneath each sub-key is the access key and secret key to use with the account. Note that the IAM::User with which the keys are associated requires only `ecr:GetAuthorizationToken` permission. A sample CloudFormation for such a user can be found [here](./aws-infrastructure/CloudFormation.yaml).
+In your custom values file, the key `AWS` contains one or more sub-keys where each sub-key is an AWS account ID. Beneath each sub-key is the access key and secret key to use with the account. Note that the IAM::User with which the keys are associated requires read access to ECR to authenticate and pull images. A sample CloudFormation for such a user can be found [here](./aws-infrastructure/CloudFormation.yaml).
 
 ```yaml
 AWS:
