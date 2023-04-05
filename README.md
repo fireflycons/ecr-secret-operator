@@ -61,7 +61,7 @@ When a resource of the above type is deployed, the operator will create a Kubern
 
 ## Installing
 
-A Helm chart is provided in [helmchart/ecr-secret-operator](.helmchart/ecr-secret-operator)
+A Helm chart is provided in [helmchart/ecr-secret-operator](./helmchart/ecr-secret-operator)
 
 
 ### Manager process values
