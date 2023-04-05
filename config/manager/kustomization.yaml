@@ -7,4 +7,4 @@ kind: Kustomization
 images:
 - name: controller
   newName: fireflycons/ecr-secret-operator
-  newTag: 0.0.3
+  newTag: 0.1.0
