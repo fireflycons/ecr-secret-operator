@@ -30,6 +30,7 @@ import (
 	"github.com/fireflycons/ecr-secret-operator/internal/ksecret"
 	corev1 "k8s.io/api/core/v1"
 	apierrs "k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -82,7 +83,7 @@ func (r *ECRSecretReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		if apierrs.IsNotFound(err) {
 			// It has just been deleted
 
-			log.Info("Unable to fetch ECRSecret - probably just deleted.")
+			log.V(5).Info("Unable to fetch ECRSecret - probably just deleted.")
 			return emptyResult, nil
 		}
 
@@ -156,6 +157,7 @@ func (r *ECRSecretReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 			return emptyResult, err
 		}
 
+		r.setStatus(ctx, &ecrSecret)
 		log.Info("Created new docker-registry secret", "ECRSecret", ecrSecret.Name, "Secret", secret.Name, "uuid", fmt.Sprintf("%v", id))
 
 	} else if err == nil {
@@ -169,11 +171,31 @@ func (r *ECRSecretReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 			if err = ksecret.UpdateSecret(&r.Auth, foundSecret, r.Clock); err == nil {
 				log.Info("Updating secret", "secret", foundSecret.Name)
 				err = r.Update(ctx, foundSecret)
+
+				if err == nil {
+					r.setStatus(ctx, &ecrSecret)
+				}
 			}
 		}
 	}
 
 	return emptyResult, err
+}
+
+func (r *ECRSecretReconciler) setStatus(ctx context.Context, ecrSecret *secretsv1beta1.ECRSecret) {
+
+	// Status updates
+	// https://heidloff.net/article/storing-state-status-kubernetes-resources-conditions-operators-go/
+
+	log := log.FromContext(ctx)
+
+	log.V(5).Info("Updating status")
+	ecrSecret.Status.LastUpdated = &metav1.Time{Time: time.Now()}
+	err := r.Client.Status().Update(ctx, ecrSecret)
+
+	if err != nil {
+		log.Info("ECRSecret resourse status update failed.")
+	}
 }
 
 // SetupWithManager sets up the controller with the Manager.
